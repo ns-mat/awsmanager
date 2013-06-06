@@ -2,6 +2,9 @@
 <?php
 require 'AWSSDKforPHP/aws.phar';
 
+$conf_file = dirname(__FILE__) . "/../conf/config.ini";
+$conf_array = parse_ini_file($conf_file);
+
 /**
  *[1]:instance-state-name
    The state of the instance.
@@ -27,9 +30,9 @@ if(count($argv) > 2){
 }
 
 $client = EC2Client::factory(array(
-				  'key'    => '',
-				  'secret' => '',
-				  'region'=>'ap-northeast-1',
+				   'key'    => $conf_array['aws_key'],
+				   'secret' => $conf_array['aws_secret'],
+				   'region' => $conf_array['aws_region'],
 				   ));
 
 if($fileterStatus != ""){
