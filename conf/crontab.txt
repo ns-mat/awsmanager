@@ -2,3 +2,4 @@
 55 23 * * * $HOME/bin/listupInstance.php running stop >> $HOME/log/instance.log
 # start EC2 instances.
 0 10 * * 1,2,3,4,5 $HOME/bin/listupInstance.php stopped start >> $HOME/log/instance.log
+#
