@@ -18,6 +18,7 @@ $conf_array = parse_ini_file($conf_file);
  **/
 
 use Aws\Ec2\Ec2Client;
+use Aws\Rds\RdsClient;
 
 $fileterStatus = "";
 if(count($argv) > 1){
@@ -83,3 +84,41 @@ foreach ($reservations as $reservation) {
 }
 
 echo "--------" . PHP_EOL;
+
+
+$client2 = RdsClient::factory(array(
+				   'key'    => $conf_array['aws_key'],
+				   'secret' => $conf_array['aws_secret'],
+				   'region' => $conf_array['aws_region'],
+				   ));
+
+
+$result = $client2->DescribeDBInstances();
+$x = $result['DBInstances'];
+foreach ($x as $instance){
+#  var_dump($instance);
+  echo "DBInstanceIdentifier: " . $instance['DBInstanceIdentifier'] . PHP_EOL;
+  echo "---> DBInstanceStatus: ". $instance['DBInstanceStatus'] . PHP_EOL;
+  echo "---> DBName: " . $instance['DBName'] . PHP_EOL;
+  echo "---> DBInstanceClass: " . $instance['DBInstanceClass'] . PHP_EOL;
+  echo "---> Engine: " . $instance['Engine'] . PHP_EOL;
+
+  $t = date('Ymd-His');
+
+  $snapname = $instance['DBInstanceIdentifier']."-".$t;
+  echo "[$snapname] [$action]\n";
+
+  if($action == "start"){
+  } else if($action == "stop"){
+    if ( $instance['DBInstanceStatus'] == 'available' ){
+      $client2->deleteDBInstance(array(
+				       'DBInstanceIdentifier' => $instance['DBInstanceIdentifier'],
+				       'FinalDBSnapshotIdentifier' => $snapname,
+				       )
+				 );
+    }
+  };
+				   
+}
+
+
