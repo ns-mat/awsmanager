@@ -19,6 +19,7 @@ $conf_array = parse_ini_file($conf_file);
 
 use Aws\Ec2\Ec2Client;
 use Aws\Rds\RdsClient;
+use Aws\CloudWatch\CloudWatchClient;
 
 $fileterStatus = "";
 if(count($argv) > 1){
@@ -120,5 +121,72 @@ foreach ($x as $instance){
   };
 				   
 }
+
+$x = $client2->describeDBSnapshots();
+$y = $x['DBSnapshots'];
+foreach ($y as $snapshot){
+  $snapshot_id = $snapshot['DBSnapshotIdentifier'];
+  echo "$snapshot_id\n";
+}
+
+foreach ($y as $snapshot){
+  $snapshot_id = $snapshot['DBSnapshotIdentifier'];
+  $db_id = $snapshot['DBInstanceIdentifier'];
+  echo "DBSnapshotIdentifier: ". $snapshot_id. "\n";
+  echo "  DBInstanceIdentifier: " . $db_id . "\n";
+  
+  if ( $snapshot_id == 'glue-20130709-235504' ){
+#    $client2->restoreDBInstanceFromDBSnapshot(array(
+#						    'DBSnapshotIdentifier' => $snapshot_id,
+#						    'DBInstanceIdentifier' => $db_id,
+#						    'AvailabilityZone' => $snapshot['AvailabilityZone'],
+#						    ));
+  }
+
+  var_dump($snapshot);
+}
+
+
+exit;
+
+
+
+
+#--------------------------------------------------------------
+
+$client3 = CloudWatchClient::factory(array(
+					   'key'    => $conf_array['aws_key'],
+					   'secret' => $conf_array['aws_secret'],
+					   'region' => 'us-east-1',
+					   ));
+$metrics = $client3->listMetrics(array('Namespace' => 'AWS/EC2'));
+foreach ($metrics as $metric){
+  var_dump($metric);
+}
+echo "xxx\n";
+$x = $client3->getMetricStatistics(array(
+					 'Namespace' => 'AWS/Billing',
+					 'MetricName' => 'EstimatedCharges',
+					 'StartTime' => '2013-06-29 00:00:00',
+					 'EndTime' => '2013-06-29 11:15:10',
+					 'Period' => 120,
+					 'Statistics' => array("Average", "Maximum", "Minimum", "SampleCount", "Sum"),
+					 'Dimensions' => array(
+							       array('Name' => 'Currency','Value' => 'USD'),
+							       array('Name' => 'ServiceName','Value' => 'AmazonEC2')
+							       )
+					 ));
+
+foreach ($x as $a =>$b){
+  echo "$a => $b\n";
+  if( is_array($b) ){
+    echo "OK $b\n";
+    var_dump($b);
+    foreach ($b as $key =>$value){
+      echo "  $key => $value\n";
+    }
+  }
+}
+#var_dump($x);
 
 
