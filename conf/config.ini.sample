@@ -1,3 +1,9 @@
 aws_key = xxx
 aws_secret = yyy
 aws_region = ap-northeast-1
+
+rds_instance_id = xxx
+rds_vpc_security_group_id = xxx
+rds_snap_backup_generation = 3
+rds_restore_waittime = 900
+
