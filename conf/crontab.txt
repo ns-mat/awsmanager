@@ -3,9 +3,9 @@
 # EC2 : start instances.
 20 9 * * 1,2,3,4,5 $HOME/bin/listupInstance.php stopped start >> $HOME/log/ec2.log
 # RDS : create snapshot and delete instance.
-35 23 * * * $HOME/bin/RdsManager.php stop >> $HOME/log/rds.log
+#35 23 * * * $HOME/bin/RdsManager.php stop >> $HOME/log/rds.log
 # RDS : restore instance and modify security group.
-10 9 * * 1,2,3,4,5 $HOME/bin/RdsManager.php start >> $HOME/log/rds.log
+#10 9 * * 1,2,3,4,5 $HOME/bin/RdsManager.php start >> $HOME/log/rds.log
 # RDS : delete old snapshots.
-0 0 * * * $HOME/bin/RdsManager.php deleteOldSnapshots >> $HOME/log/rds.log
+#0 0 * * * $HOME/bin/RdsManager.php deleteOldSnapshots >> $HOME/log/rds.log
 
