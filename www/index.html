@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tower AWS Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <link href="./css/style.css" rel="stylesheet" media="screen">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="./js/html5shiv.js"></script>
+      <script src="./js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Tower AWS Dashboard</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">インスタンス</a></li>
+            <li><a href="#about">料金</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="page-header">
+        <h1>Instances</h1>
+      </div>
+
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>Name</th>
+	    <th>State</th>
+	    <th>Type</th>
+	    <th>IP Address</th>
+	    <th></th>
+	  </tr>
+	</thead>
+	<tbody data-bind="foreach: instances">
+	  <tr>
+	    <td data-bind="text: name"></td>
+	    <td><span class="label" data-bind="text: state, css: { 'label-success': $root.status(state) == 1, 'label-warning': $root.status(state) == 2, 'label-default': $root.status(state) <= 0 }"></span></td>
+	    <td data-bind="text: type"></td>
+	    <td>
+	      <p>Public: <span data-bind="text: ipaddress_public"></span></p>
+	      <p>Private: <span data-bind="text: ipaddress"></span></p>
+	    </td>
+	    <td>
+	      <button class="btn btn-success" data-bind="click: $root.startInstance, css: { hide: state != 'stopped' }">Start</button>
+	      <button class="btn btn-warning" data-bind="click: $root.stopInstance, css: { hide: state != 'running' }">Stop</button>
+	      <a href="#" class="btn btn-primary" disabled="disabled">Boost!!!</a>
+	    </td>
+	  </tr>
+	</tbody>
+      </table>
+
+      <div class="footer">
+        <p>&copy; NEXTSCAPE INC 2013</p>
+      </div>
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./js/jquery-1.10.2.min.js"></script>
+    <script src="./js/knockout-3.1.0.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/application.js"></script>
+  </body>
+</html>
